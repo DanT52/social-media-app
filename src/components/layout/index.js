@@ -2,6 +2,7 @@ import { LOGIN } from "lib/routes";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "hooks/auth";
+import Navbar from "components/navbar";
 
 export default function Layout() {
     const { pathname } = useLocation();
@@ -23,6 +24,7 @@ export default function Layout() {
 
     return (
         <>
+        <Navbar />
         This is the child: <Outlet />
         </>
     )
