@@ -20,7 +20,7 @@ export default function Navbar() {
         
         >
             <Flex px="4" w="full" align="center" maxW="1200px">
-                <Link color="teal" as={RouterLink} to={DASHBOARD} fontWeight="bold">
+                <Link color="blue.500" as={RouterLink} to={DASHBOARD} fontWeight="bold">
                     Home
                 </Link>
 
