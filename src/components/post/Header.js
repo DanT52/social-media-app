@@ -4,7 +4,8 @@ import UsernameButton from "components/profile/UsernameButton";
 import { formatDistanceToNow } from "date-fns";
 import { useUser } from "hooks/users";
 
-export default function Header({uid, date}) {
+export default function Header({ post }) {
+    const { uid, date } = post;
     const {user, isLoading} = useUser(uid);
     if (isLoading) return "loading"
 
