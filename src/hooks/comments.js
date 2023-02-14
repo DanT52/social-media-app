@@ -1,6 +1,6 @@
 
 import { uuidv4 } from "@firebase/util";
-import { collection, doc, orderBy, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, orderBy, query, setDoc, where } from "firebase/firestore";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { db } from "lib/firebase";
@@ -47,4 +47,30 @@ export function useComments(postID) {
 
     return {comments, isLoading};
 
+}
+
+export function useDeleteComment(id) {
+
+    const [isLoading, setLoading] = useState();
+    const toast = useToast();
+
+
+    async function deleteComment(){
+        setLoading(true);
+
+        const docRef = doc(db, "comments", id);
+
+        await deleteDoc(docRef);
+
+        toast({
+            title: "comment deleted",
+            status: "info",
+            isClosable: true,
+            position: "top",
+            duration: 5000
+           })
+        setLoading(false);
+
+    }
+    return {deleteComment, isLoading}
 }

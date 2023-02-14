@@ -5,6 +5,7 @@ import {FaRegHeart, FaHeart, FaComment, FaRegComment, FaTrash} from "react-icons
 import {useToggleLike, useDeletePost} from "hooks/posts";
 import { Link } from "react-router-dom";
 import { PROTECTED } from "lib/routes";
+import { useComments } from "hooks/comments";
 
 export function Actions({post}) {
 
@@ -15,6 +16,7 @@ export function Actions({post}) {
 
     const {toggleLike, isLoading: likeLoading} = useToggleLike({id, isLiked, uid: user?.id});
     const {deletePost, isLoading: deleteLoading} = useDeletePost(id);
+    const {comments, isLoading: commentsLoading} = useComments(id);
 
    
 
@@ -40,9 +42,9 @@ export function Actions({post}) {
                 size="md" 
                 colorScheme="blue" 
                 variant="ghost" 
-                icon={<FaRegComment />}
+                icon={comments?.length === 0 ? <FaRegComment /> : <FaComment/>}
                 isRound/>
-                 5
+                 {comments?.length}
             </Flex>
 
             <IconButton 
