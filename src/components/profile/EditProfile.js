@@ -17,7 +17,7 @@ import Avatar from "./Avatar"
 
 export default function EditProfile({isOpen, onClose}) {
     const {user, isLoading: authLoading} = useAuth();
-    const {setFile, updateAvatar, isLoading: fileLoading} = useUpdateAvatar(user?.id);
+    const {setFile, updateAvatar, isLoading: fileLoading, fileURL} = useUpdateAvatar(user?.id);
 
     function handleChange(e){
         setFile(e.target.files[0])
@@ -34,7 +34,7 @@ export default function EditProfile({isOpen, onClose}) {
                 <ModalBody>
                     <HStack spacing="5">
 
-                        <Avatar user={user}/>
+                        <Avatar user={user} overrideAvatar={fileURL}/>
 
                         <FormControl py="4">
                             <FormLabel htmlfor="picture">Change avatar </FormLabel>

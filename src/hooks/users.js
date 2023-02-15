@@ -1,9 +1,9 @@
-import { doc, query } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import { collection, doc, query, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "lib/firebase";
 import { useState } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { useToast } from "@chakra-ui/react"
+import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
+import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export function useUser(id) {
@@ -22,11 +22,30 @@ export function useUpdateAvatar(uid) {
     const navigate = useNavigate();
 
     async function updateAvatar() {
-        setLoading(true)
 
-        const fileRef = ref(storage, "avatars/" + uid)
+        if (!file){
+            toast({
+                title: "No file selected",
+                description: "Please select a file to upload",
+                status: "error",
+                isClosable: true,
+                position: "top",
+                duration: 5000
+            });
 
-        await uploadBytes(fileRef, file)
+            return;
+
+        }
+        setLoading(true);
+
+        const fileRef = ref(storage, "avatars/" + uid);
+
+        await uploadBytes(fileRef, file);
+
+        const avatarURL = await getDownloadURL(fileRef)
+
+        const docRef = doc( db, "users", uid);
+        await updateDoc(docRef, {avatar: avatarURL})
 
         toast({
             title: "Profile Picture Uploaded",
@@ -34,12 +53,24 @@ export function useUpdateAvatar(uid) {
             isClosable: true,
             position: "top",
             duration: 5000
-           })
+        });
+
 
         setLoading(false)
         navigate(0)
+        
     }
 
 
-    return {setFile, updateAvatar, isLoading}
+    return {
+        setFile, 
+        updateAvatar, 
+        isLoading, 
+        fileURL: file && URL.createObjectURL(file),
+    };
+}
+
+export function useUsers() {
+    const [users, isLoading] = useCollectionData(collection(db, "users"))
+    return{users, isLoading}
 }

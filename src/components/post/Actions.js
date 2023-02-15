@@ -9,7 +9,7 @@ import { useComments } from "hooks/comments";
 
 export function Actions({post}) {
 
-    const { id, likes} = post;
+    const { id, likes, uid} = post;
     const {user, isLoading: userLoading} = useAuth();
 
     const isLiked = likes.includes(user?.id);
@@ -47,7 +47,7 @@ export function Actions({post}) {
                  {comments?.length}
             </Flex>
 
-            <IconButton 
+            { !userLoading && (user.id === uid) &&<IconButton 
                 ml="auto"
                 onClick={deletePost}
                 isLoading={deleteLoading || userLoading}
@@ -55,7 +55,7 @@ export function Actions({post}) {
                 colorScheme="red" 
                 variant="ghost" 
                 icon={<FaTrash />}
-                isRound/>
+                isRound/>}
             
 
 

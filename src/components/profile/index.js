@@ -1,6 +1,7 @@
 import {Divider, Flex, HStack, Stack, Text, Button, useDisclosure } from "@chakra-ui/react"
 import PostsLists from "components/post/PostsLists";
 import { format } from "date-fns";
+import { useAuth } from "hooks/auth";
 import { usePosts } from "hooks/posts";
 import { useUser } from "hooks/users";
 import { useParams } from "react-router-dom"
@@ -13,14 +14,15 @@ export default function Profile() {
     const {posts, isLoading: postsLoading} = usePosts(id);
     const {user, isLoading: userLoading} = useUser(id);
     const {isOpen, onOpen, onClose} = useDisclosure();
-    if (userLoading) return "loading..."
+    const {user: authUser, isloading: authLoading} = useAuth();
+    if (userLoading || postsLoading) return "loading..."
 
     return (
         <Stack spacing="5">
             <Flex p={["4", "6"]} pos="relative" align="center">
                 <Avatar user={user} size="2xl"/>
 
-                <Button 
+                {!authLoading && (authUser.id === user.id ) &&<Button 
                 pos="absolute" 
                 mb="2" 
                 top="6" 
@@ -29,7 +31,7 @@ export default function Profile() {
                 onClick={onOpen}
                 >
                     change avatar
-                </Button>
+                </Button>}
                 <Stack ml="10">
                     <Text fontSize="2xl">@{user.username}</Text>
                     <HStack spacing="10">
